@@ -19,7 +19,6 @@ void convertToLowercase(char lettersInWord[]);
 void displayGame(char wordToCheck[rows][columns], int currentGuessNum);
 bool checkForWin(char wordToCheck[rows][columns], int guessNum);
 
-
 int main(){
 	
 	char word[rows][columns];
@@ -164,7 +163,7 @@ void playTheGame(char wordToCheck[rows][columns]){
 	} while (guessCount < maxGuesses && !won);
 
 	if (!won){
-		printf("You lost, better luck next time!");
+		printf("You lost, better luck next time!\n");
 	}
 }
 
