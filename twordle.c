@@ -6,22 +6,22 @@
 #include <stdbool.h>
 
 #define INFILE "word.txt"
-#define maxGuesses 6
-#define strLength 5
-#define rows 7
-#define columns 6
+#define maxNumofGuesses 6
+#define definedWordLength 5
+#define wordStorage 7
+#define wordString 6
 
-void wordInput(char wordFileInput[rows][columns]);
-void playTheGame(char wordToCheck[rows][columns]);
-void getGuesses(char wordToCheck[rows][columns], int guessNum);
+void wordInput(char wordFileInput[wordStorage][wordString]);
+void playTheGame(char wordToCheck[wordStorage][wordString]);
+void getGuesses(char wordToCheck[wordStorage][wordString], int guessNum);
 bool isAcceptableWord(char lettersInWord[]);
 void convertToLowercase(char lettersInWord[]);
-void displayGame(char wordToCheck[rows][columns], int currentGuessNum);
-bool checkForWin(char wordToCheck[rows][columns], int guessNum);
+void displayGame(char wordToCheck[wordStorage][wordString], int currentGuessNum);
+bool checkForWin(char wordToCheck[wordStorage][wordString], int guessNum);
 
 int main(){
 	
-	char word[rows][columns];
+	char word[wordStorage][wordString];
 	
 	wordInput(word);
 	playTheGame(word);
@@ -29,23 +29,23 @@ int main(){
 	return 0;
 }
 
-void wordInput(char wordFileInput[rows][columns]){
+void wordInput(char wordFileInput[ wordStorage][wordString]){
 	FILE* inPTR = fopen(INFILE, "r");
 	
 	if (inPTR != NULL){
-		fgets(wordFileInput[0], columns, inPTR);
+		fgets(wordFileInput[0], wordString, inPTR);
 	}
 	
 	fclose(inPTR);
 }
 
-void getGuesses(char wordToCheck[rows][columns], int guessNum){
+void getGuesses(char wordToCheck[wordStorage][wordString], int guessNum){
 	bool acceptableWord = false;
 	printf("Enter your guess: ");
 	
 	while (!acceptableWord){
 		scanf("%s", wordToCheck[guessNum]);
-		convertToLowercase(wordToCheck[guessNum]);
+		convertToLowercase(wordToCheck[guessNum]); //convertToLowercase call
 		
 		if (isAcceptableWord(wordToCheck[guessNum])){
 			acceptableWord = true;
@@ -57,18 +57,18 @@ void getGuesses(char wordToCheck[rows][columns], int guessNum){
 	}
 }
 
-bool isAcceptableWord(char lettersInWord[]){
+bool isAcceptableWord(char lettersInTheWord[]){
 	int length = 0;
-	while (lettersInWord[length] != '\0'){
-		bool isLetter = (lettersInWord[length] >= 'a' && lettersInWord[length] <= 'z') ||
-				(lettersInWord[length] >= 'A' && lettersInWord[length] <= 'Z');
+	while (lettersInTheWord[length] != '\0'){
+		bool isLetter = (lettersInTheWord[length]  >= 'a' && lettersInTheWord[length] <= 'z') ||
+				(lettersInTheWord[length]  >= 'A' && lettersInTheWord[length] <= 'Z');
 		if (!isLetter){
 			return false;
 		}
 		length++;
 	}
 	
-	if (length == strLength){
+	if (length == definedWordLength){
 		return true;
 	}
 	else{
@@ -77,28 +77,28 @@ bool isAcceptableWord(char lettersInWord[]){
 
 }
 
-void convertToLowercase(char lettersInWord[]){
-	for (int i = 0; i < strLength; i++){
-		if (lettersInWord[i] >= 'A' && lettersInWord[i] <= 'Z'){
-			lettersInWord[i] = lettersInWord[i] + 32;
+void convertToLowercase(char lettersInTheWord[]){
+	for (int i = 0; i < definedWordLength; i++){
+		if (lettersInTheWord[i] >= 'A' && lettersInTheWord[i] <= 'Z'){
+			lettersInTheWord[i] = lettersInTheWord[i] + 32; //from ASCII table
 		}
 	}
 }
 
-void displayGame(char wordToCheck[rows][columns], int currentGuessNum){
+void displayGame(char wordToCheck[wordStorage][wordString], int guessNumber){
 
 	printf("================================\n");
 
-	for (int i = 1; i <= currentGuessNum; i++){
-		char carrotHolder[columns] = "     ";
+	for (int i = 1; i <= guessNumber; i++){
+		char carrotHolder[wordString] = "     ";
 		
-		for (int j = 0; j < strLength; j++){
+		for (int j = 0; j < definedWordLength; j++){
 			if (wordToCheck[i][j] == wordToCheck[0][j]){
 				printf("%c", wordToCheck[i][j] - 32);
 			}
 			else {
 				printf("%c", wordToCheck[i][j]);
-				for (int k = 0; k < strLength; k++){
+				for ( int k = 0; k < definedWordLength; k++){
 					if (wordToCheck[i][j] == wordToCheck[0][k]){
 						carrotHolder[j] = '^';
 					}
@@ -109,8 +109,8 @@ void displayGame(char wordToCheck[rows][columns], int currentGuessNum){
 	}
 }
 
-bool checkForWin(char wordToCheck[rows][columns], int guessNum){
-	for (int i = 0; i < strLength; i++){
+bool checkForWin(char wordToCheck[wordStorage][wordString], int guessNum){
+	for (int i = 0; i < definedWordLength; i++){
 		if (wordToCheck[guessNum][i] != wordToCheck[0][i]){
 			return false;
 		}
@@ -118,7 +118,7 @@ bool checkForWin(char wordToCheck[rows][columns], int guessNum){
 	return true;
 }
 
-void playTheGame(char wordToCheck[rows][columns]){
+void playTheGame(char wordToCheck[wordStorage][wordString]){
 	int guessCount = 0;
 	bool won = false;
 	
@@ -131,7 +131,7 @@ void playTheGame(char wordToCheck[rows][columns]){
 		}
 	
 		getGuesses(wordToCheck, guessCount + 1);
-		displayGame(wordToCheck, guessCount + 1);
+		displayGame(wordToCheck,  guessCount + 1);
 	
 		if (checkForWin(wordToCheck, guessCount + 1)){
 			won = true;
@@ -139,8 +139,8 @@ void playTheGame(char wordToCheck[rows][columns]){
 			
 			printf("================================\n");
 			printf("            ");
-			for (int i = 0; i < strLength; i++){
-				printf("%c", wordToCheck[0][i] - 32);
+			for (int i = 0; i < definedWordLength; i++){
+				 printf("%c", wordToCheck[0][i] - 32);
 			}
 			printf("\n");
 			
@@ -160,7 +160,7 @@ void playTheGame(char wordToCheck[rows][columns]){
 		}
 		guessCount++;
 	
-	} while (guessCount < maxGuesses && !won);
+	} while (guessCount < maxNumofGuesses && !won);
 
 	if (!won){
 		printf("You lost, better luck next time!\n");
